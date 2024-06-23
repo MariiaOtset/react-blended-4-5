@@ -3,9 +3,12 @@ import { Header } from 'components';
 import Home from 'pages/Home';
 import Rates from 'pages/Rates';
 import { useEffect } from 'react';
-import { getUserInfo } from './service';
+import { featchBaseCurrency } from 'reduxState/operation';
+import { useDispatch } from 'react-redux';
+import { setbaseCurrency } from 'reduxState/currencySlice';
 
 export const App = () => {
+  const dispatch = useDispatch();
   useEffect(() => {
     const options = {
       enableHighAccuracy: true,
@@ -14,15 +17,15 @@ export const App = () => {
     };
 
     function success(pos) {
-      getUserInfo(pos.coords);
+      dispatch(featchBaseCurrency(pos.coords));
     }
 
-    function error(err) {
-      console.warn(`ERROR(${err.code}): ${err.message}`);
+    function error() {
+      dispatch(setbaseCurrency('USD'));
     }
 
     navigator.geolocation.getCurrentPosition(success, error, options);
-  }, []);
+  }, [dispatch]);
 
   return (
     <>
